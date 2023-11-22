@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+
+{% block title %}Список категорий{% endblock %}
+
+{% block content %}
+
+<div>
+    <div>
+	<ul>
+	{% recursetree object_list %}
+	    <li>
+			<li><a href="#" class="link-dark rounded">{{ node.ent_name }}</a></li>
+
+
+		    {% if not node.is_leaf_node %}
+
+                <ul class="children">
+                    {{ children }}
+                </ul>
+			{% endif %}
+
+	    </li>
+	{% endrecursetree %}
+	</ul>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+
+{% block content %}
+    <!--<h1>Удалить категорию</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+      <p>Вы действиетльно хотите удалить данную категорию?</p>
+      <button type="submit">Удалить</button>
+      <input type="submit" value="Confirm" />
+    </form>-->
+
+<style>
+    .form-group {
+        margin-left: 20px;
+        margin-top: 20px;
+        width: 500px;
+
+    }
+</style>
+<div class="container mt-3">
+    <center>
+        <div class="form-group">
+            <h3>Удалить категорию</h3>
+
+            <form action="" method="post" class="card p-3 mt-5">
+
+                {% csrf_token %}
+                {% bootstrap_form form %}
+
+                <button type="submit" class="btn btn-primary">Удалить</button>
+
+
+            </form>
+            <a href='/'><button type="GET" class="btn btn-secondary">Назад</button></a>
+        </div>
+    </center>
+</div>
+{% endblock content %}

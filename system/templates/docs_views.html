@@ -1,0 +1,18 @@
+<!--Просмотр списка файлов с привязанными к ним документами-->
+
+{% block content %}
+    <ul class="files-list">
+        {% for doc in object_list %}
+
+
+            <!--<a href="{{file.file}}" download="newfilename">Файл</a>-->
+            <a href="{{doc.document.url}}" target="_blank">{{doc.doc_name}}</a>
+            <div> Тип документа: {{doc.doc_type}}</div>
+
+            <div>Язык документа: {{doc.document_language}}</div><br>
+
+
+        {% endfor %}
+    </ul>
+
+{% endblock %}

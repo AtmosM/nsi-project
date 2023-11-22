@@ -1,0 +1,391 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+{% block content %}
+
+    <style>
+            html {
+                height: 100%;
+            }
+            .container {
+                margin-left: 20px;
+                margin-top: 20px;
+
+            }
+            li {
+                list-style-type: none;
+            }
+            .container-md {
+                border: 1px solid black;
+                width: 300px;
+                border-radius: 3%;
+                margin-left: 20px;
+            }
+
+            nav {
+                background-color: #e8e8e8;
+
+            }
+
+            header {
+                background-color: white;
+
+            }
+
+            header, body {
+                margin: 0;
+                padding: 0;
+
+            }
+
+            body {
+                height: 100%
+                background-image: url('{% static '../static/static_files/4853433.jpg' %}')
+            }
+
+            .navbar navbar-expand-lg bg-body-tertiary {
+                margin : 0;
+                padding: 0;
+            }
+
+            .footer {
+	            position: absolute;
+	            background: #666;
+	            border: 2px;
+	            left: 0;
+	            bottom: 0;
+	            width: 100%;
+	            height: 200px;
+            }
+
+            .search {
+                display:inline-block;
+            }
+             .search1 {
+                display:inline-block;
+            }
+            .line {
+                display:inline-block;
+            }
+
+
+
+
+
+
+
+        </style>
+
+        <style>
+             .btn btn-link 1 {
+                background-color: #3498DB;
+                color: white;
+                padding: 16px;
+                font-size: 16px;
+                border: none;
+                cursor: pointer;
+            }
+
+            /* Dropdown button on hover & focus */
+            .btn btn-link 1:hover, .btn btn-link 1:focus {
+                background-color: #2980B9;
+            }
+
+            /* The container <div> - needed to position the dropdown content */
+            .btn btn-link 1 {
+                position: relative;
+                display: inline-block;
+            }
+
+            /* Dropdown Content (Hidden by Default) */
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            /* Links inside the dropdown */
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            /* Change color of dropdown links on hover */
+            .dropdown-content a:hover {background-color: #ddd}
+
+            /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+            .show {display:block;}
+
+            #frame {
+                margin: 0 auto;
+                width: 800px;
+                max-width: 100%;
+                text-align: center;
+            }
+
+            #frame input[type=radio] {
+                display: none;
+            }
+
+            #frame label {
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            #slides {
+                padding: 10px;
+                
+
+                position: relative;
+                z-index: 1;
+            }
+
+            #overflow {
+                width: 100%;
+                overflow: hidden;
+            }
+
+            #frame1:checked~#slides .inner {
+                margin-left: 0;
+            }
+
+            #frame2:checked~#slides .inner {
+                margin-left: -100%;
+            }
+
+            #frame3:checked~#slides .inner {
+                margin-left: -200%;
+            }
+
+
+
+            #slides .inner {
+                transition: margin-left 800ms
+                    cubic-bezier(0.770, 0.000, 0.175, 1.000);
+                width: 400%;
+                line-height: 0;
+                height: 300px;
+            }
+
+            #slides .frame {
+                width: 25%;
+                float: left;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                color: #FFF;
+            }
+
+
+
+
+
+
+            #controls {
+                margin: -180px 0 0 0;
+                width: 100%;
+                height: 50px;
+                z-index: 3;
+                position: relative;
+            }
+
+            #controls label {
+                transition: opacity 0.2s ease-out;
+                display: none;
+                width: 50px;
+                height: 50px;
+                opacity: .4;
+            }
+
+            #controls label:hover {
+                opacity: 1;
+            }
+
+            #frame1:checked~#controls label:nth-child(2),
+            #frame2:checked~#controls label:nth-child(3),
+            #frame3:checked~#controls label:nth-child(4),
+
+
+            #frame1:checked~#controls label:nth-last-child(2),
+            #frame2:checked~#controls label:nth-last-child(3),
+            #frame3:checked~#controls label:nth-last-child(4),
+
+
+            #bullets {
+                margin: 150px 0 0;
+                text-align: center;
+            }
+
+            #bullets label {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 100%;
+                background: #ccc;
+                margin: 0 10px;
+            }
+
+            #frame1:checked~#bullets label:nth-child(1),
+            #frame2:checked~#bullets label:nth-child(2),
+            #frame3:checked~#bullets label:nth-child(3),
+
+
+            @media screen and (max-width: 900px) {
+
+                #frame1:checked~#controls label:nth-child(2),
+                #frame2:checked~#controls label:nth-child(3),
+                #frame3:checked~#controls label:nth-child(4),
+                #frame4:checked~#controls label:nth-child(1),
+                #frame1:checked~#controls label:nth-last-child(2),
+                #frame2:checked~#controls label:nth-last-child(3),
+                #frame3:checked~#controls label:nth-last-child(4),
+
+
+                #slides {
+                    max-width: calc(100% - 140px);
+                    margin: 0 auto;
+                }
+            }
+
+        </style>
+
+    <script type="text/javascript">
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+          if (!event.target.matches('.btn btn-link 1')) {
+
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+
+    </script>
+    <head>
+        <title>
+            WEB-сервис
+        </title>
+    </head>
+
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <a href='/'><img src= "{% static '../static/static_files/system-settings-svgrepo-com.svg'  %}" alt="Лого" width="40" height="40"></a>
+
+            <div class="container-fluid">
+
+
+                <a href='/form'><button type="GET" class="btn btn-secondary btn-sm">Создать категорию </button></a>
+                <a href='/add-file'><button type="GET" class="btn btn-secondary btn-sm">Добавить файл</button></a>
+
+                <a href='/files-cat'><button type="GET" class="btn btn-secondary btn-sm">Привязать файл</button></a>
+                <a href='/files'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть файлы</button></a>
+
+                <li class="last">
+                    <div class="dropdown">
+                        <a>User</a> |
+                        <button onclick="myFunction()" class="btn btn-link 1">⇊</button>
+                        <div id="myDropdown" class="dropdown-content">
+                            <a href="/logout"><button type="GET" class="btn btn-link">Выйти</button></a>
+                            <a href='/password-change'><button type="GET" class="btn btn-link">Сменить пароль</button></a>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </nav>
+    </header>
+
+    <body style="background-image: url('{% static '../static/static_files/4853433.jpg' %}')">
+
+        <marquee><h1>Компания ООО "ВЗЧ" занимается разработкой софта в сфере телекоммуникаций и продажей телекоммуникационного оборудования</h1></marquee>
+        <center><h1>О компани</h1></center>
+         <div>
+                Основным видом деятельности компании ООО "ВЗЧ" является "Торговля оптовая прочими машинами и оборудованием". Компания также зарегистрирована в таких категориях ОКВЭД как "Производство электромонтажных работ"
+                Группа компаний «Взлет» — российское производственное предприятие, разработчик и производитель систем и приборов учета расхода жидкостей, тепловой энергии и газов. Со дня своего основания Взлет прошел путь от небольшого предприятия до группы компаний, деятельность которой охватывает всю Россию, различные страны Европы и Азии.
+                Продукция «Взлет» сегодня востребована в Китае, Индии, Турции, Южной Корее, Болгарии, Сербии, Аргентине, Финляндии, Анголе и многих других странах. Качество приборов «Взлет» подтверждают сертификаты соответствия Европейского союза, выданные Национальным институтом метрологии в Германии (РТВ). Эксплуатационные характеристики продукции ГК «Взлет» регулярно получали высокую положительную оценку как отечественных, так и зарубежных заказчиков. Выполняя свою главную задачу – выпуск и внедрение современных, надежных, функциональных приборов и систем учета, компания «Взлет» придерживается международных стандартов ведения бизнеса и взаимоотношений на рынке, а также соответствует основным принципам государственной политики энергосбережения и рационального использования природных ресурсов. Благодаря активной позиции в решении вопросов сохранения национальных богатств и охраны окружающей среды, мы с каждым годом добиваемся все большего признания на отечественном и зарубежном рынках.
+                ГК «Взлет» успешно работает с заказчиками из ключевых отраслей реального сектора российской экономики – от ЖКХ и Водоканалов до предприятий нефте-газового сектора и атомной промышленности. Постоянными клиентами ГК «Взлет» на протяжении многих лет являются крупнейшие транснациональные компании - ОАО «Роснефть», ОАО «Газпром», ОАО «Концерн Росэнергоатом» и ОАО «РусГидро» и другие лидеры отрасли ТЭК.
+
+         </div>
+        <hr>
+        <center>
+
+
+            <h2>
+                Местоположение
+            </h2>
+            <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3Abfaa62e982146e6cb29ca7c0dddc63b2ad293f0962f8d3874f43b6142500ae83&amp;source=constructor" width="500" height="400" frameborder="0"></iframe>
+            <br>
+            <hr>
+            <br>
+            <div id="frame">
+                <input type="radio" name="frame" id="frame1" checked />
+                <input type="radio" name="frame" id="frame2" />
+                <input type="radio" name="frame" id="frame3" />
+                <input type="radio" name="frame" id="frame4" />
+                <div id="slides">
+                    <div id="overflow">
+                        <div class="inner">
+                            <div class="frame frame_1">
+                                <div class="frame-content">
+                                    <img src= "{% static '../static/static_files/Im1.jpg'  %}" width= 800px">
+                                    <h2>Slide 1</h2>
+                                </div>
+                            </div>
+                            <div class="frame frame_2">
+                                <div class="frame-content">
+                                    <img src= "{% static '../static/static_files/Im2.jpg'  %}" width= 800px">
+                                </div>
+                            </div>
+                            <div class="frame frame_3">
+                                <div class="frame-content">
+                                    <img src= "{% static '../static/static_files/Im3.jpg'  %}" width= 800px">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="controls">
+                    <label for="frame1"></label>
+                    <label for="frame2"></label>
+                    <label for="frame3"></label>
+
+                </div>
+                <div id="bullets">
+                    <label for="frame1"></label>
+                    <label for="frame2"></label>
+                    <label for="frame3"></label>
+
+                </div>
+            </div>
+
+        </center>
+
+    </body>
+
+    <footer>
+        <center>
+            <div>
+                Группа компаний ВЗЛЕТ
+
+            </div>
+            <a href="https://vzljot.ru/kontakty/gruppa_kompanii_vzljot1/">Контакты ГК ВЗЛЕТ</a>
+        </center>
+
+    </footer>
+{% endblock %}

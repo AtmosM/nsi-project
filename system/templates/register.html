@@ -1,0 +1,40 @@
+<!-- Шаблон регистрации поьзователя -->
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+
+<style>
+    .form-group {
+        margin-left: 20px;
+        margin-top: 20px;
+        width: 300px
+        border: 1px solid black;
+    }
+
+</style>
+
+
+
+<div class="container mt-3">
+    <center>
+        <div class="form-group">
+             <h3>Регистрация</h3>
+            <form method="post" class="card p-3 mt-5">
+                {%csrf_token%}
+                {%for f in form%}
+                    <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}: </label>{{f}}</p>
+                    <div class="form-error">{{f.errors}}</div>
+                {%endfor%}
+            <button type="submit" class="btn btn-primary mt-3 ">Зарегистрироваться</button>
+
+            </form>
+       </div>
+    </center>
+</div>
+
+
+
+{%endblock%}

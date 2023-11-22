@@ -1,0 +1,45 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<style>
+    .container {
+        margin-left: 20px;
+        margin-top: 20px;
+        width: 200px;
+    }
+    .doc-search {
+        margin-left: 20px;
+        margin-top: 20px;
+        width: 500px;
+
+    }
+    h2 {
+      margin-left: 20px;
+      margin-top: 20px;
+      width: 500px;
+    }
+
+</style>
+
+{% block content %}
+<div class="container">
+    <h2>Результат поиска</h2>
+    <ul class="doc-search">
+        {% for f in object_list %}
+            <a href="{{f.document.url}}" target="_blank">{{f.doc_name}}</a>
+            <div>Тип документа: {{f.doc_type}}</div>
+            <div>Язык документа: {{f.document_language}}</div><br>
+
+
+        {% endfor %}
+    </ul>
+    <center>
+        <a href='/' >
+            <button type="GET" class="btn btn-info">
+                Назад
+            </button>
+        </a>
+    </center>
+
+</div>
+{% endblock %}

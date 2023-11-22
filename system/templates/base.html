@@ -1,0 +1,685 @@
+<!-- Базовый шаблон главной страницы -->
+<!doctype html>
+<html lang="en">
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load mptt_tags %}
+{% load group_tag %}
+{% load cat_file %}
+{% load cat_entities %}
+{% load doc_files %}
+{% load doc_file_relation %}
+{% load static %}
+
+<head>
+
+
+    <style>
+        html {
+            height: 100%;
+        }
+        .container {
+            margin-left: 20px;
+            margin-top: 20px;
+
+        }
+        li {
+            list-style-type: none;
+        }
+        .container-md {
+            border: 1px solid black;
+            width: 300px;
+            border-radius: 3%;
+            margin-left: 20px;
+        }
+
+        nav {
+            background-color: #e8e8e8;
+
+        }
+
+        header {
+            background-color: white;
+
+        }
+
+        header, body {
+            margin: 0;
+            padding: 0;
+
+        }
+
+        body {
+            height: 100%
+
+        }
+
+        .navbar navbar-expand-lg bg-body-tertiary {
+            margin : 0;
+            padding: 0;
+        }
+
+        footer {
+            background: #e8e8e8;
+            position: absolute;
+	        left: 0;
+	        bottom: 0;
+	        width: 100%;
+	        height: 100px;
+        }
+
+        .search {
+            display:inline-block;
+        }
+         .search1 {
+            display:inline-block;
+        }
+        .line {
+            display:inline-block;
+        }
+
+
+
+
+
+
+
+    </style>
+
+    <style>
+         .btn btn-link 1 {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Dropdown button on hover & focus */
+        .btn btn-link 1:hover, .btn btn-link 1:focus {
+            background-color: #2980B9;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .btn btn-link 1 {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {background-color: #ddd}
+
+        /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+        .show {display:block;}
+    </style>
+
+    <script type="text/javascript">
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+          if (!event.target.matches('.btn btn-link 1')) {
+
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+
+    </script>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+    <title>Manage system</title>
+
+
+<header>
+    {%if request.user.is_authenticated%}
+        {% if request.user|has_group:"Администратор" %}
+
+               <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                    <div class="container-fluid">
+
+                        <a href='/form'><button type="GET" class="btn btn-secondary btn-sm">Создать категорию </button></a>
+                        <a href='/add-file'><button type="GET" class="btn btn-secondary btn-sm">Добавить файл</button></a>
+                        <a href='/files-cat'><button type="GET" class="btn btn-secondary btn-sm">Привязать файл</button></a>
+                        <a href='/files'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть файлы</button></a>
+                        <a href='/add-document'><button type="GET" class="btn btn-secondary btn-sm">Добавить документ</button></a>
+                        <a href='/doc-file'><button type="GET" class="btn btn-secondary btn-sm">Привязать документ</button></a>
+                        <a href='/documents'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть документы</button></a>
+                        <a href='/pract'><button type="GET" class="btn btn-secondary btn-sm">Практика</button></a>
+
+
+                        <li class="last">
+                            <div class="dropdown">
+                                {{user.username}} |
+                                <button onclick="myFunction()" class="btn btn-link 1">⇊</button>
+                                <div id="myDropdown" class="dropdown-content">
+                                    <a href="/logout"><button type="GET" class="btn btn-link">Выйти</button></a>
+                                    <a href='/password-change'><button type="GET" class="btn btn-link">Сменить пароль</button></a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+               </nav>
+
+            <div class="container">
+
+                <div class="search">
+                    <!--Поиск файлов-->
+                        <form action="/search-file/" method="get">
+                            <input name="q" type="text" placeholder="Поиск файлов...">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                <img src= "{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                            </button>
+                        </form>
+                </div>
+                <div class="line">   </div>
+                <div class="search1">
+                    <!--Поиск документов-->
+                        <form action="/search-docs/" method="get">
+                            <input name="w" type="text" placeholder="Поиск документов...">
+                            <button type="submit" class="btn btn-outline-success btn-sm">
+                                <img src="{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                            </button>
+                        </form>
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+    {%else%}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <li class="last"><a href="/register">Registration</a> | <a href="/login">Login</a></li>
+            </div>
+        </nav>
+    {% endif %}
+
+
+    {%if request.user.is_authenticated%}
+        {% if request.user|has_group:"Полный" %}
+
+               <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                    <div class="container-fluid">
+
+                        <a href='/form'><button type="GET" class="btn btn-secondary btn-sm">Создать категорию </button></a>
+                        <a href='/files'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть файлы</button></a>
+                        <a href='/documents'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть документы</button></a>
+                        <a href='/add-document'><button type="GET" class="btn btn-secondary btn-sm">Добавить документ</button></a>
+                        <a href='/add-file'><button type="GET" class="btn btn-secondary btn-sm">Добавить файл</button></a>
+                        <a href='/files-cat'><button type="GET" class="btn btn-secondary btn-sm">Привязать файл</button></a>
+                        <a href='/doc-file'><button type="GET" class="btn btn-secondary btn-sm">Привязать документ</button></a>
+
+                        <li class="last">
+                            <div class="dropdown">
+                                {{user.username}} |
+                                <button onclick="myFunction()" class="btn btn-link 1">⇊</button>
+                                <div id="myDropdown" class="dropdown-content">
+                                    <a href="/logout"><button type="GET" class="btn btn-link">Выйти</button></a>
+                                    <a href='/password-change'><button type="GET" class="btn btn-link">Сменить пароль</button></a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+               </nav>
+
+            <div class="search">
+                <!--Поиск файлов-->
+                    <form action="/search-file/" method="get">
+                        <input name="q" type="text" placeholder="Поиск файлов...">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                            <img src= "{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                        </button>
+                    </form>
+            </div>
+
+            <div class="search1">
+            <!--Поиск документов-->
+                <form action="/search-docs/" method="get">
+                    <input name="w" type="text" placeholder="Поиск документов...">
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        <img src="{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    {%else%}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <li class="last"><a href="/register">Registration</a> | <a href="/login">Login</a></li>
+            </div>
+        </nav>
+    {% endif %}
+
+
+    {%if request.user.is_authenticated%}
+        {% if request.user|has_group:"Редактирование" %}
+
+               <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                    <div class="container-fluid">
+
+                        <a href='/add-file'><button type="GET" class="btn btn-secondary btn-sm">Добавить файл</button></a>
+                         <a href='/files-cat'><button type="GET" class="btn btn-secondary btn-sm">Привязать файл</button></a>
+                        <a href='/files'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть файлы</button></a>
+                         <a href='/add-document'><button type="GET" class="btn btn-secondary btn-sm">Добавить документ</button></a>
+                        <a href='/doc-file'><button type="GET" class="btn btn-secondary btn-sm">Привязать документ</button></a>
+                        <a href='/documents'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть документы</button></a>
+
+                        <li class="last">
+                            <div class="dropdown">
+                                {{user.username}} |
+                                <button onclick="myFunction()" class="btn btn-link 1">⇊</button>
+                                <div id="myDropdown" class="dropdown-content">
+                                    <a href="/logout"><button type="GET" class="btn btn-link">Выйти</button></a>
+                                    <a href='/password-change'><button type="GET" class="btn btn-link">Сменить пароль</button></a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+               </nav>
+
+            <div class="search">
+                <!--Поиск файлов-->
+                    <form action="/search-file/" method="get">
+                        <input name="q" type="text" placeholder="Поиск файлов...">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                            <img src= "{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                        </button>
+                    </form>
+            </div>
+
+            <div class="search1">
+            <!--Поиск документов-->
+                <form action="/search-docs/" method="get">
+                    <input name="w" type="text" placeholder="Поиск документов...">
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        <img src="{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    {%else%}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <li class="last"><a href="/register">Registration</a> | <a href="/login">Login</a></li>
+            </div>
+        </nav>
+    {% endif %}
+
+
+    {%if request.user.is_authenticated%}
+        {% if request.user|has_group:"Просмотр" %}
+
+               <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                    <div class="container-fluid">
+
+                        <a href='/files'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть файлы</button></a>
+                        <a href='/documents'><button type="GET" class="btn btn-secondary btn-sm">Просмотреть документы</button></a>
+
+                        <li class="last">
+                            <div class="dropdown">
+                                {{user.username}} |
+                                <button onclick="myFunction()" class="btn btn-link 1">⇊</button>
+                                <div id="myDropdown" class="dropdown-content">
+                                    <a href="/logout"><button type="GET" class="btn btn-link">Выйти</button></a>
+                                    <a href='/password-change'><button type="GET" class="btn btn-link">Сменить пароль</button></a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+               </nav>
+
+            <div class="search">
+                <!--Поиск файлов-->
+                    <form action="/search-file/" method="get">
+                        <input name="q" type="text" placeholder="Поиск файлов...">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                            <img src= "{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                        </button>
+                    </form>
+            </div>
+
+            <div class="search1">
+            <!--Поиск документов-->
+                <form action="/search-docs/" method="get">
+                    <input name="w" type="text" placeholder="Поиск документов...">
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        <img src="{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    {%else%}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <li class="last"><a href="/register">Registration</a> | <a href="/login">Login</a></li>
+            </div>
+        </nav>
+    {% endif %}
+
+
+    {%if request.user.is_authenticated%}
+        {% if request.user|has_group:"Нет доступа" %}
+
+               <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                    <div class="container-fluid">
+
+                        <li class="last">
+                            <div class="dropdown">
+                                {{user.username}} |
+                                <button onclick="myFunction()" class="btn btn-link 1">⇊</button>
+                                <div id="myDropdown" class="dropdown-content">
+                                    <a href="/logout"><button type="GET" class="btn btn-link">Выйти</button></a>
+                                    <a href='/password-change'><button type="GET" class="btn btn-link">Сменить пароль</button></a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+               </nav>
+
+            <div class="search">
+                <!--Поиск файлов-->
+                    <form action="/search-file/" method="get">
+                        <input name="q" type="text" placeholder="Поиск файлов...">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                            <img src= "{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                        </button>
+                    </form>
+            </div>
+
+            <div class="search1">
+            <!--Поиск документов-->
+                <form action="/search-docs/" method="get">
+                    <input name="w" type="text" placeholder="Поиск документов...">
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        <img src="{% static '../static/static_files/search.png'  %}" alt="Иконка" width="20" height="20">
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    {%else%}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <li class="last"><a href="/register">Registration</a> | <a href="/login">Login</a></li>
+            </div>
+        </nav>
+    {% endif %}
+
+</header>
+</head>
+
+<body>
+
+    {%if request.user.is_authenticated%}
+        {% if request.user|has_group:"Администратор" %}
+
+            <div class="container">
+
+                <div>Дерево категорий:</div>
+                <ul>
+
+                {% recursetree object_list %}
+                    <li>
+                        <a href="/category/{{ node.id }}/">
+                        {{ node.ent_name }}
+                        </a>
+                        {% if node.is_root_node %}
+                            {% if node.id == root_category_id %}
+                                {% if not node.is_leaf_node %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if not node.is_leaf_node %}
+                                {% if current_category.id == node.id %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% elif node.level < current_category.level %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+
+                        {% if node.is_leaf_node %}
+                                {% if current_category.id == node.id %}
+                                    {% if node.cat_file_id != "NULL" %}
+                                        <ul class="files-currrent-list">
+                                            {% current_category_files as cf %}
+                                            {% current_entities as ce %}
+
+                                            <div class="container-md">
+                                                {% for ent in ce %}
+                                                    {% if node.id == ent.id_entities_id %}
+                                                        {% for a in cf %}
+                                                            {% if ent.id_file_id == a.id %}
+                                                                <div class="files-cont">
+
+                                                                    <a href="{{a.file.url}}" target="_blank">{{a.file_name}}</a>
+                                                                    <div>Версия файла: {{a.file_version}}</div>
+
+                                                                    <div>
+                                                                        {% documets_info as di %}
+                                                                        {% docs_to_file as dtf %}
+                                                                        {% for doc in dtf %}
+                                                                            {% if doc.id_file_id == a.id %}
+                                                                                {% for docs in di %}
+                                                                                    {% if doc.id_document_id == docs.id %}
+                                                                                        <div class="docs-list">
+                                                                                            <a href="{{docs.document.url}}" target="_blank">{{docs.doc_name}}</a>
+                                                                                            <div> ↑ Тип документа | {{docs.doc_type}}</div>
+                                                                                        </div>
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                    <a href='/file-update/{{a.slug}}'>Редактировать файл</a>
+                                                                    <hr style="width:200px">
+                                                                <div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </ul>
+                                    {% else %}
+                                        <ul class="none-files-currrent-list">
+                                            <div>Нет прикрепленных файлов</div>
+                                        </ul>
+                                    {% endif %}
+                                {% endif %}
+                        {% endif %}
+
+                        {% endif %}
+                    </li>
+                {% endrecursetree %}
+                    <br>
+                    <a href='/'><button type="GET" class="btn btn-secondary btn-sm">Назад</button></a>
+
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if request.user|has_group:"Полный" %}
+            <div class="container">
+                <hr>
+                <div>Дерево категорий</div>
+                <ul>
+                {% recursetree object_list %}
+                    <li>
+                        <a href="/category/{{ node.id }}/">
+                        {{ node.ent_name }}
+                        </a>
+                        {% if node.is_root_node %}
+                            {% if node.id == root_category_id %}
+                                {% if not node.is_leaf_node %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+
+                        {% else %}
+                            {% if not node.is_leaf_node %}
+                                {% if current_category.id == node.id %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% elif node.level < current_category.level %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                {% endrecursetree %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if request.user|has_group:"Редактирование" %}
+            <div class="container">
+                <hr>
+                <div>Дерево категорий</div>
+                <ul>
+                {% recursetree object_list %}
+                    <li>
+                        <a href="/category/{{ node.id }}/">
+                        {{ node.ent_name }}
+                        </a>
+                        {% if node.is_root_node %}
+                            {% if node.id == root_category_id %}
+                                {% if not node.is_leaf_node %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+
+                        {% else %}
+                            {% if not node.is_leaf_node %}
+                                {% if current_category.id == node.id %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% elif node.level < current_category.level %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                {% endrecursetree %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if request.user|has_group:"Просмотр" %}
+            <div class="container">
+                <div>У вас недостаточно прав для доступа к данному разделу</div>
+                <a href='/form'><button type="GET">Создать категорию</button></a> <br>
+
+                <hr>
+                <div>Дерево категорий</div>
+                <ul>
+                {% recursetree object_list %}
+                    <li>
+                        <a href="/category/{{ node.id }}/">
+                        {{ node.ent_name }}
+                        </a>
+                        {% if node.is_root_node %}
+                            {% if node.id == root_category_id %}
+                                {% if not node.is_leaf_node %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+
+                        {% else %}
+                            {% if not node.is_leaf_node %}
+                                {% if current_category.id == node.id %}
+                                    <ul class="children">
+                                        {{ children }}
+                                        {% block content %}
+                                            <ul class="files-list">
+                                                {% for file in object_list %}
+                                                    <p class="first">File name: {{file.file_name}}</p>
+                                                    <!--<a href="{{file.file}}" download="newfilename">Файл</a>-->
+                                                    <a href="{{file.file.url}}" target="_blank">Просмотреть файл</a>
+
+                                                {% endfor %}
+                                            </ul>
+                                        {% endblock %}
+                                    </ul>
+                                {% elif node.level < current_category.level %}
+                                    <ul class="children">
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                {% endrecursetree %}
+                </ul>
+            </div>
+        {%endif%}
+
+        {% if request.user|has_group:"Нет доступа" %}
+            <div class="container">Нет прав на просмотр содердимого</div>
+        {% endif %}
+    {%endif%}
+
+
+
+
+</body>
+
+<footer>
+    <center>
+        <ul>
+            <div>Разработчик: Борисенков Матвей Сергеевич</div>
+            <div>Контакты:</div>
+            <li>Телефон: +79815082260</li>
+            <li>Email: borisenkov.matvey@mail.ru</li>
+        </ul>
+    </center>
+</footer>
+</html>

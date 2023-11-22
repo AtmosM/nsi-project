@@ -1,0 +1,45 @@
+<!-- Шаблон авторизации пользователя -->
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+
+<style>
+    .form-group {
+        margin-left: 20px;
+        margin-top: 20px;
+        width: 300px
+        border: 1px solid black;
+    }
+    .container{
+        width: 490px;
+    }
+
+</style>
+
+
+
+<div class="container">
+    <center>
+        <div class="form-group">
+            <form method="post" class="card p-3 mt-5">
+                <h3>Авторизуйтесь, пожалуйста!</h3><br>
+                {%csrf_token%}
+                <div class="form-error">{{form.non_field}}</div>
+                {%for f in form%}
+                    <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}: </label>{{f}}</p>
+                    <div class="form-error">{{f.errors}}</div>
+                {%endfor%}
+
+                <button type="submit" class="btn btn-primary  ">Авторизоваться</button>
+
+
+            </form>
+            <a href='/password-change'><button type="GET" class="btn btn-primary mt-3 ">Сменить пароль</button></a> <br>
+        </div>
+    </center>
+</div>
+
+{%endblock%}
